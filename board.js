@@ -36,7 +36,7 @@ Board.prototype.indexFor = function([row, col]) {
   
   // Return undefined if we're out of bounds
   if (row < 0 || row >= this.height || col < 0 || col >= this.width)
-    return  
+    return 
   return row * this.width + col
 }
 
@@ -55,7 +55,7 @@ Board.prototype.get = function (coords) {
  * Set the value of the board at coords to value.
  */
 Board.prototype.set = function(coords, value) {
-  // TODO
+  this.cells[this.indexFor(coords)] = !this.cells[this.indexFor(coords)];  
 }
 
 /**
@@ -64,7 +64,19 @@ Board.prototype.set = function(coords, value) {
  * Return the count of living neighbors around a given coordinate.
  */
 Board.prototype.livingNeighbors = function([row, col]) {
-  // TODO: Return the count of living neighbors.
+  let count = 0;
+  for (let xCoord = row-1; xCoord <= row+1; xCoord++) {
+    for (let yCoord = col-1; yCoord <= col+1; yCoord++) {
+      if ((xCoord >= 0 && xCoord < this.width) && (yCoord >= 0 && yCoord < this.height)) {
+        if (xCoord === row && yCoord === col) {
+          continue;
+        } else if (this.cells[this.indexFor([xCoord,yCoord])]) {
+          count++;
+        }
+      }
+    }
+  }
+  return count;
 }
 
 /**
@@ -73,7 +85,7 @@ Board.prototype.livingNeighbors = function([row, col]) {
  * Toggle the cell at coords from alive to dead or vice versa.
  */
 Board.prototype.toggle = function(coords) {
-  // TODO
+    this.cells[this.indexFor(coords)] = !this.cells[this.indexFor(coords)]; 
 }
 
 /**
@@ -84,7 +96,16 @@ Board.prototype.toggle = function(coords) {
  * @param {Number} numLivingNeighbors 
  */
 function conway(isAlive, numLivingNeighbors) {
-  // TODO
+
+  if (isAlive) {
+    if (numLivingNeighbors < 2) {return false}
+    else if (numLivingNeighbors > 3) {return false}
+    else {return true}
+  }
+  if (!isAlive){
+    if (numLivingNeighbors === 3) {return true}
+    else {return false}
+  }
 }
 
 /**
@@ -96,6 +117,14 @@ function conway(isAlive, numLivingNeighbors) {
  * @param {(Boolean, Int) -> Boolean} rules (default: conway)
  */
 function tick(present, future, rules=conway) {
-  // TODO
+  //console.log(present.cells, future.cells);
+  for (let xMov = 0; xMov < future.width; xMov++) {
+    for (let yMov = 0; yMov < future.height; yMov++) {
+      if ( rules ( present.cells[present.indexFor([xMov, yMov])],
+      present.livingNeighbors([xMov, yMov]) ) ) {
+        future.toggle([xMov, yMov]);
+      }
+    }
+  }
   return [future, present]
 }

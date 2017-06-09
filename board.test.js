@@ -99,6 +99,7 @@ describe('Board::livingNeighbors(coords)', () => {
       [1, 0, 1,
        0, 1, 1,
        0, 0, 0])
+    console.log("failed test");
     expect(board.livingNeighbors([1, 1])).toEqual(3)
   })
 

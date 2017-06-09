@@ -5,6 +5,12 @@ if (mainElement) {
   // Connect #step_btn to the step function
   document.getElementById('step_btn')
     .addEventListener('click', game.step)
+  document.getElementById('play_btn')
+    .addEventListener('click', game.play)
+  document.getElementById('reset_btn')
+    .addEventListener('click', game.random)
+  document.getElementById('clear_btn')
+    .addEventListener('click', game.clear)
 
   // TODO: Connect other buttons.
 }
@@ -16,6 +22,7 @@ function Life(container, width=12, height=12) {
   // becomes `present` and vice versa.
   var present = new Board(width, height);
   var future = new Board(width, height);
+  var isActive = false;
 
   // Create a <table> to hold our cells.
   var table = createTable();
@@ -50,12 +57,20 @@ function Life(container, width=12, height=12) {
     // FIXME: This currently always toggles cell (0, 0).
     // How do we get the coordinate of the cell that was clicked on?
     // HINT: https://developer.mozilla.org/en-US/docs/Web/API/Event/target
-    var cell = document.getElementById('0-0'); // ⬅️ Fix me
+    var cell = document.getElementById(event.target.id); // ⬅️ Fix me
     present.toggle(cell.coord)
     paint()
   }
 
   function paint() {
+    let cells = table.getElementsByTagName('td');
+    // ^Computationally expesive :(
+    for (let cellIndex = 0; cellIndex < cells.length; cellIndex++) {
+      let coords = cells[cellIndex].coord;
+      if (present.get(coords)) {cells[cellIndex].classList.add('alive')}
+      else {cells[cellIndex].classList.remove('alive')}
+    }
+
     // TODO:
     //   1. For each <td> in the table:
     //     a. If its cell is alive, give the <td> the `alive` CSS class.
@@ -67,6 +82,8 @@ function Life(container, width=12, height=12) {
     // HINT:
     //   https://developer.mozilla.org/en-US/docs/Web/API/Element/classList
     //   https://developer.mozilla.org/en-US/docs/Web/API/Element/getElementsByTagName
+    // let elementClasses = table.classList
+    // for (let element = 0; element < elementClasses.length; element++) {}
   }
 
   function step() {
@@ -104,6 +121,10 @@ function Life(container, width=12, height=12) {
   }
 
   function play() {
+
+    var intervalID = setInterval(step, 100);
+    isActive = true;
+
     // TODO:
     // Start playing by running the `step` function    
     // automatically repeatedly every fixed time interval
@@ -113,16 +134,32 @@ function Life(container, width=12, height=12) {
   }
 
   function stop() {
+
+//    if (document.getElementById('play_btn')
+    if (isActive) {
+      clearInterval();
+    }
+
     // TODO: Stop autoplay.
     // HINT:
     // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/clearInterval
   }
 
   function togglePlaying() {
+
+    if (isActive) {stop()}
+    else {play()}
+
     // TODO: If we're playing, stop. Otherwise, start playing.
   }
 
   function clear() {
+
+    this.present.tick(this.present, this.future,
+    conway = function(isAlive, numLivingNeighbors) {
+      return false;
+    })
+
     // TODO: Clear the board
   }
 
